@@ -1,32 +1,49 @@
 import React from "react";
+import { useEffect, useState } from "react";
 
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
-import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 const ProjectCard = (props) => {
-    const {percentage} = props;
+    
+    const {project} = props;
+    const [percentage, setPercentage] = useState(0);
+
+    useEffect(() => {
+        var totalTasks = project.tasks.length;
+        var completedTasks = 0;
+        project.tasks.forEach(task => {
+            if(task.status === 'completed') {
+                completedTasks++;
+            }
+        })
+        setPercentage((completedTasks/totalTasks)*100);
+    }, [project.tasks]);
+
     return (
-        <div>
-            <Card sx={{ maxWidth: 250 }}>
-                <CardActionArea>
-                    <CardContent>
-                        <CircularProgressbar value={percentage} text={`${percentage}%`} />
-                        <Typography gutterBottom variant="h5" component="div">
-                            Project 1
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Lizards are a widespread group of squamate reptiles, with over 6,000
-                            species, ranging across all continents except Antarctica
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        </div>
+        <Card sx={{ maxWidth: 250 }} style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+            <CardActionArea>
+                <CardContent>
+                    <CircularProgressbarWithChildren value={percentage ? percentage : 0} text={`${percentage ? percentage.toFixed(2) : '0'}%`}>
+                        <h5 style={{paddingTop:'25%', color:'#BC7F54'}}>{project.tasks.length} {project.tasks.length === 1 ? 'task' :'tasks'}</h5>
+                    </CircularProgressbarWithChildren>
+                    <Typography gutterBottom variant="h5" component="div" style={{paddingTop: '1%'}}>
+                        {project.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {project.description}
+                    </Typography>
+                    <Typography variant="subtitle2" gutterBottom color="rgba(0, 0, 0, 0.54)">
+                        {project.date_added.slice(5,16)}
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
     );
 }
 export default ProjectCard;

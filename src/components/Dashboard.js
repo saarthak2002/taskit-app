@@ -19,25 +19,36 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(false);
     const [loginError, setLoginError] = useState(false);
 
+    const [projects, setProjects] = useState([]);
+
     useEffect(() => {
         setLoading(true);
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log(user.uid);
                 setUser(user);
-                
-                axios
-                    .get(process.env.REACT_APP_API_URI + 'users/' + user.uid)
-                    .then((response) => {
-                        console.log(response.data);
-                        setUserInfo(response.data);
+
+                const apiRequests = [
+                    axios.get(process.env.REACT_APP_API_URI + 'projects/' + user.uid),
+                    axios.get(process.env.REACT_APP_API_URI + 'users/' + user.uid)
+                ];
+
+                Promise
+                    .all(apiRequests)
+                    .then((responses) => {
+                        const projects = responses[0].data;
+                        const userInfo = responses[1].data;
+                        console.log(projects);
+                        console.log(userInfo);
+                        setProjects(projects);
+                        setUserInfo(userInfo);
                         setLoading(false);
                     })
                     .catch((error) => {
                         console.log('error:' + error);
                         setLoading(false);
                         setLoginError(true);
-                    });
+                    })
             } else {
                 setUser(null);
                 setUserInfo({firstname:'', lastname:'', username:''});
@@ -73,7 +84,23 @@ const Dashboard = () => {
                         </Grid>
                         {userInfo && <h2>Hello, {userInfo?.firstname + ' ' + userInfo?.lastname}</h2>}
                         {user ? user.email && <h5>{user.email} {user.uid}</h5> : <h5>No user logged in</h5>}
-                        <ProjectCard percentage={45}/>
+                        {projects.length > 0 ?
+
+                            <Grid container spacing={2}>
+                                {
+                                    projects.map(
+                                        (project) => (
+                                            <Grid item key={project.id}>
+                                                <ProjectCard project={project} />
+                                            </Grid>
+                                        )
+                                    )
+                                }
+                            </Grid>
+                        :
+                            <h3>No projects yet</h3>
+                    }
+                        
                     </div>
             }
         </div>

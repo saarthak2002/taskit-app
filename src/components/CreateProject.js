@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { auth } from '../firebase-config';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-import { Alert, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import { useNavigate } from "react-router";
