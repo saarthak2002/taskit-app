@@ -157,6 +157,7 @@ const ProjectDetails = () => {
                                 })
                             }
                         </Grid>
+
                         <Modal
                             aria-labelledby="transition-modal-title"
                             aria-describedby="transition-modal-description"
@@ -172,10 +173,11 @@ const ProjectDetails = () => {
                         >
                             <Fade in={open}>
                                 <Box sx={style}>
-                                    <AddTaskModal project={project} handleClose={handleClose} refresh={getTaskList} setLoading={setLoading} />
+                                    <AddTaskModal project={project} handleClose={handleClose} refresh={getTaskList} />
                                 </Box>
                             </Fade>
                         </Modal>
+
                     </div>
             }
         </div>
