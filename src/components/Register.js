@@ -30,7 +30,7 @@ const Register = () => {
 
         try {
             const user = await createUserWithEmailAndPassword(auth, email, password);
-            
+            console.log(user);
             var bodyFormData = new FormData();
             bodyFormData.append('userUID', auth.currentUser.uid);
             bodyFormData.append('username', userName);

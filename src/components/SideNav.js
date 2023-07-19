@@ -13,6 +13,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import SpeedIcon from '@mui/icons-material/Speed';
 import MenuIcon from '@mui/icons-material/Menu';
+import TableRowsIcon from '@mui/icons-material/TableRows';
+import PeopleIcon from '@mui/icons-material/People';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
@@ -58,6 +60,22 @@ function SideNav(props) {
                             <SpeedIcon />
                         </ListItemIcon>
                         <ListItemText primary={'Dashboard'} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem key={'projects'} disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <TableRowsIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={'Projects'} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem key={'collaborate'} disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <PeopleIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={'Collaborate'} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem key={'logout'} disablePadding>
