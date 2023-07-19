@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router";
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
@@ -10,7 +10,7 @@ import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 const ProjectCard = (props) => {
-    
+    const navigate = useNavigate();
     const {project} = props;
     const [percentage, setPercentage] = useState(0);
 
@@ -27,7 +27,7 @@ const ProjectCard = (props) => {
 
     return (
         <Card sx={{ maxWidth: 250 }} style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-            <CardActionArea>
+            <CardActionArea onClick={() => {console.log(project.id); navigate('/project-details/' + project.id);} }>
                 <CardContent>
                     <CircularProgressbarWithChildren value={percentage ? percentage : 0} text={`${percentage ? percentage.toFixed(2) : '0'}%`}>
                         <h5 style={{paddingTop:'25%', color:'#BC7F54'}}>{project.tasks.length} {project.tasks.length === 1 ? 'task' :'tasks'}</h5>
