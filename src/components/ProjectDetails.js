@@ -187,28 +187,64 @@ const ProjectDetails = () => {
                                 project.tasks.map( task => {
                                     if (selectedChip === 'Pending') {
                                         if (task.status === 'pending') {
-                                            return (
-                                                <Grid item key={task.id}>
-                                                    <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
-                                                </Grid>
-                                            )
+                                            if (categoryChipFilter === 'None') {
+                                                return (
+                                                    <Grid item key={task.id}>
+                                                        <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                    </Grid>
+                                                )
+                                            }
+                                            else if (task.task_category_name === categoryChipFilter) {
+                                                return (
+                                                    <Grid item key={task.id}>
+                                                        <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                    </Grid>
+                                                )
+                                            }
+                                            else {
+                                                return null;
+                                            }
                                         }
                                     }
                                     else if (selectedChip === 'Completed') {
                                         if (task.status === 'completed') {
+                                            if (categoryChipFilter === 'None') {
+                                                return (
+                                                    <Grid item key={task.id}>
+                                                        <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                    </Grid>
+                                                )
+                                            }
+                                            else if (task.task_category_name === categoryChipFilter) {
+                                                return (
+                                                    <Grid item key={task.id}>
+                                                        <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                    </Grid>
+                                                )
+                                            }
+                                            else {
+                                                return null;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if (categoryChipFilter === 'None') {
                                             return (
                                                 <Grid item key={task.id}>
                                                     <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
                                                 </Grid>
                                             )
                                         }
-                                    }
-                                    else {
-                                        return (
-                                            <Grid item key={task.id}>
-                                                <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
-                                            </Grid>
-                                        )
+                                        else if (task.task_category_name === categoryChipFilter) {
+                                            return (
+                                                <Grid item key={task.id}>
+                                                    <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                </Grid>
+                                            )
+                                        }
+                                        else {
+                                            return null;
+                                        }
                                     }
                                 })
                             }
