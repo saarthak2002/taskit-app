@@ -73,7 +73,26 @@ const EditCategoriesModal = (props) => {
     };
 
     const deleteCategory = () => {
+        setModalLoading(true);
         console.log(categoryToDelete);
+
+        const headers = {
+            'Content-Type': 'application/json',
+        }
+
+        axios
+            .post(process.env.REACT_APP_API_URI + 'taskcategories/' + categoryToDelete + '/delete', { headers: headers })
+            .then((response) => {
+                console.log(response.data.message);
+                refresh();
+                handleClose();
+                setModalLoading(false);
+            })
+            .catch((error) => {
+                console.log('error:' + error);
+                alert('error:' + error);
+                setModalLoading(false);
+            })
     }
 
     useEffect(() => {
@@ -87,7 +106,7 @@ const EditCategoriesModal = (props) => {
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                         <CircularProgress size={'3rem'} />
                     </div>
-                    :
+                :
                     <div>
                         <Typography variant="h6" component="h2" sx={{ paddingBottom: '2%' }}>
                             Add Category
