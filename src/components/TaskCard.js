@@ -18,6 +18,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import DeleteTaskModal from "./DeleteTaskModal";
 import EditTaskModal from "./EditTaskModal";
+import Chip from '@mui/material/Chip';
 import axios from "axios";
 
 const ExpandMore = styled((props) => {
@@ -109,6 +110,13 @@ const TaskCard = (props) => {
                         </IconButton>
                     }
                 />
+                <CardContent>
+                    <Chip
+                        label={task.task_category_name}
+                        variant="filled"
+                        style={{color: 'white', backgroundColor: task.task_category_color}}
+                    />
+                </CardContent>
                 <CardActions disableSpacing>
                     <ExpandMore
                         expand={expanded}
