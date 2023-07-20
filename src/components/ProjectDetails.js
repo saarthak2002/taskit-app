@@ -14,7 +14,11 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Backdrop from '@mui/material/Backdrop';
 import AddTaskModal from "./AddTaskModal";
+import EditCategoriesModal from "./EditCategoriesModal";
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import CategoryIcon from '@mui/icons-material/Category';
+import { Typography } from "@mui/material";
 
 const style = {
     position: 'absolute',
@@ -34,12 +38,18 @@ const ProjectDetails = () => {
     const [loading, setLoading] = useState(false);
     const [project, setProject] = useState({tasks:[]});
     const [selectedChip, setSelectedChip] = useState("All");
+    const [categoryChipFilter, setCategoryChipFilter] = useState("None");
     const [percentage, setPercentage] = useState(0);
     const [completedTasks, setCompletedTasks] = useState(0);
+    const [categories, setCategories] = useState([{name:'', color:''}]);
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const [openCatModal, setOpenCatModal] = useState(false);
+    const handleOpenCatModal = () => setOpenCatModal(true);
+    const handleCloseCatModal = () => setOpenCatModal(false);
 
 
     const getTaskList = useCallback(() => {
@@ -57,18 +67,33 @@ const ProjectDetails = () => {
                 })
                 setPercentage((completedTasks/totalTasks)*100);
                 setCompletedTasks(completedTasks);
-                setLoading(false);
+                axios
+                    .get(process.env.REACT_APP_API_URI + 'taskcategories/project/' + id)
+                    .then((response) => {
+                        console.log(response.data);
+                        setCategories(response.data);
+                        setLoading(false);
+                    })
+                    .catch((error) => {
+                        console.log('error:' + error);
+                        alert('error:' + error);
+                        setLoading(false);
+                    })
             })
             .catch((error) => {
                 console.log('error:' + error);
+                alert('error:' + error);
                 setLoading(false);
             })
     }, [id]);
 
-    
-
     const handleChipClick = (chip) => {
         setSelectedChip(chip);
+    }
+
+    const handleCategoryChipClick = (category) => {
+        console.log('filter by category: ' + category)
+        setCategoryChipFilter(category);
     }
 
     useEffect(() => {
@@ -90,11 +115,21 @@ const ProjectDetails = () => {
                                 <h1>{project.title}</h1>
                             </Grid>
                             <Grid item>
-                                
-                                    <Button variant="contained" size="large" onClick={handleOpen}>
-                                        + Add Task
-                                    </Button>
-                                
+                                <IconButton 
+                                    aria-label="edit" 
+                                    style={{borderRadius:1}}
+                                    sx={{
+                                        border: "1px solid",
+                                        borderColor: "rgb(117,117,117)"
+                                    }}
+                                    onClick={handleOpenCatModal}
+                                >
+                                    <CategoryIcon style={{marginRight:5}}/>
+                                    <Typography>Categories</Typography>
+                                </IconButton>
+                                <Button variant="contained" size="large" onClick={handleOpen} style={{marginLeft:20}}>
+                                    + Add Task
+                                </Button>
                             </Grid>
                         </Grid>
 
@@ -105,7 +140,7 @@ const ProjectDetails = () => {
                             </div>
                         </div>
                         
-                        <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" style={{padding:'1%'}}>
+                        <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" style={{padding:'1%', paddingBottom:0}}>
                             <Chip 
                                 label="All" 
                                 onClick={() => {handleChipClick("All")}} 
@@ -124,6 +159,27 @@ const ProjectDetails = () => {
                                 variant={selectedChip === "Completed" ? "filled" : "outlined"}
                                 color="success"
                             />
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" style={{padding:'1%'}}>
+                            <Chip
+                                label="None"
+                                variant={categoryChipFilter === "None" ? "filled" : "outlined"}
+                                style={categoryChipFilter === "None" ? {color: 'white', backgroundColor: '#bab5b5'} :{color: '#bab5b5', borderColor: '#bab5b5'}}
+                                onClick={() => {handleCategoryChipClick("None")}}
+                            />
+                            {
+                                categories.map(category => {
+                                    return (
+                                        <Chip
+                                            key={category.id}
+                                            label={category.name}
+                                            variant={categoryChipFilter === category.name ? "filled" : "outlined"}
+                                            style={categoryChipFilter === category.name ? {color: 'white', backgroundColor: category.color} :{color: category.color, borderColor: category.color}}
+                                            onClick={() => {handleCategoryChipClick(category.name)}}
+                                        />
+                                    )
+                                })
+                            }
                         </Stack>
                         {project.tasks.length === 0 && <h3 style={{textAlign:'center'}}>No tasks added yet.</h3>}
                         <Grid container spacing={2}>
@@ -158,6 +214,7 @@ const ProjectDetails = () => {
                             }
                         </Grid>
 
+                        {/* Add task modal */}
                         <Modal
                             aria-labelledby="transition-modal-title"
                             aria-describedby="transition-modal-description"
@@ -170,10 +227,33 @@ const ProjectDetails = () => {
                                     timeout: 500,
                                 },
                             }}
+                            sx={{overflow:'scroll'}}
                         >
                             <Fade in={open}>
                                 <Box sx={style}>
                                     <AddTaskModal project={project} handleClose={handleClose} refresh={getTaskList} />
+                                </Box>
+                            </Fade>
+                        </Modal>
+
+                        {/* Edit category modal */}
+                        <Modal
+                            aria-labelledby="transition-modal-title"
+                            aria-describedby="transition-modal-description"
+                            open={openCatModal}
+                            onClose={handleCloseCatModal}
+                            closeAfterTransition
+                            slots={{ backdrop: Backdrop }}
+                            slotProps={{
+                                backdrop: {
+                                    timeout: 500,
+                                },
+                            }}
+                            sx={{overflow:'scroll'}}
+                        >
+                            <Fade in={openCatModal}>
+                                <Box sx={style}>
+                                    <EditCategoriesModal project={project} handleClose={handleCloseCatModal} refresh={getTaskList}/>
                                 </Box>
                             </Fade>
                         </Modal>
