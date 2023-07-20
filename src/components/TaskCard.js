@@ -91,6 +91,18 @@ const TaskCard = (props) => {
             })
     }
 
+    function formatDate(isoDate) {
+        const dateObject = new Date(isoDate);
+        const year = dateObject.getFullYear();
+        const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObject.getDate()).padStart(2, '0');
+        const hours = String(dateObject.getHours()).padStart(2, '0');
+        const minutes = String(dateObject.getMinutes()).padStart(2, '0');
+        const seconds = String(dateObject.getSeconds()).padStart(2, '0');
+      
+        return `${hours}:${minutes}:${seconds} on ${year}-${month}-${day} `;
+    }
+
     return (
         <div>
             {/* Task Info Card */}
@@ -130,6 +142,12 @@ const TaskCard = (props) => {
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
                         <Typography paragraph>{ task.description }</Typography>
+                        { 
+                            task.status === 'completed' &&
+                            <Typography color="rgb(176,176,176)">
+                                Completed at { task.completed_at_time ? formatDate(task.completed_at_time) : '' }
+                            </Typography>
+                        }
                         <IconButton onClick={() => {handleOpenEditModal();} }>
                             <EditIcon />
                         </IconButton>
