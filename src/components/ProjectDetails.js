@@ -19,6 +19,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CategoryIcon from '@mui/icons-material/Category';
 import { Typography } from "@mui/material";
+import DonutChart from './DonutChart';
 
 const style = {
     position: 'absolute',
@@ -50,7 +51,6 @@ const ProjectDetails = () => {
     const [openCatModal, setOpenCatModal] = useState(false);
     const handleOpenCatModal = () => setOpenCatModal(true);
     const handleCloseCatModal = () => setOpenCatModal(false);
-
 
     const getTaskList = useCallback(() => {
         setLoading(true);
@@ -109,7 +109,7 @@ const ProjectDetails = () => {
                     </div>
                 :
                     <div>
-                        <h1>Project Details</h1>
+                        <h1 style={{paddingBottom:'1%'}}> </h1>
                         <Grid container justifyContent="space-between" alignItems="center">
                             <Grid item>
                                 <h1>{project.title}</h1>
@@ -133,12 +133,15 @@ const ProjectDetails = () => {
                             </Grid>
                         </Grid>
 
-                        <div style={{margin:'auto', width:'50%'}}>
-                            <div style={{margin:'auto', width:'30%'}}>
+                        <Stack direction={{ xs: 'column', xl: 'row' }} spacing={1} alignItems="center" justifyContent="center" style={{padding:'1%'}}>
+                            <div style={{width:'15%'}}>
                                 <CircularProgressbarWithChildren value={percentage ? percentage : 0} text={`${percentage ? percentage.toFixed(2) : '0'}%`} />
                                 <h5 style={{color:'#BC7F54', textAlign:'center'}}>{completedTasks} of {project.tasks.length} {project.tasks.length === 1 ? 'task' :'tasks'} completed</h5>
                             </div>
-                        </div>
+                            <div style={{ marginBottom:'5%'}}>
+                                <DonutChart project={project} categories={categories}/>
+                            </div>
+                        </Stack>
                         
                         <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" style={{padding:'1%', paddingBottom:0}}>
                             <Chip 
@@ -160,6 +163,7 @@ const ProjectDetails = () => {
                                 color="success"
                             />
                         </Stack>
+                        
                         <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" style={{padding:'1%'}}>
                             <Chip
                                 label="None"
@@ -182,7 +186,7 @@ const ProjectDetails = () => {
                             }
                         </Stack>
                         {project.tasks.length === 0 && <h3 style={{textAlign:'center'}}>No tasks added yet.</h3>}
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2} sx={{justifyContent:'center'}}>
                             {
                                 project.tasks.map( task => {
                                     if (selectedChip === 'Pending') {
