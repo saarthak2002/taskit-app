@@ -4,43 +4,44 @@ import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
-    Filler,
     Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 
 ChartJS.register(
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
-    Filler,
     Legend
 );
 
 const options = {
     responsive: true,
+    scales: {
+        y: {
+            beginAtZero: true,
+            grace: '5%',
+        }
+    },
     plugins: {
         legend: {
             position: 'top',
         },
         title: {
             display: true,
-            text: '7 Day Progress',
-        },
+            text: 'Project Progress',
+        }
     },
 };
 
-const AreaChart = (props) => {
-
+const BarChart = (props) => {
     const { user } = props;
     const [loading, setLoading] = useState(false);
 
@@ -49,11 +50,14 @@ const AreaChart = (props) => {
             labels: [],
             datasets: [
                 {
-                    fill: true,
-                    label: 'Tasks Completed',
+                    label: 'Total Tasks',
                     data: [],
-                    borderColor: 'rgb(53, 162, 235)',
-                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                },
+                {
+                    label: 'Completed',
+                    data: [],
+                    backgroundColor: 'rgba(226,146,142, 0.5)',
                 },
             ],
         }
@@ -62,23 +66,28 @@ const AreaChart = (props) => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get(process.env.REACT_APP_API_URI + 'stats/tasks/weekly/' + user.uid)
+            .get(process.env.REACT_APP_API_URI + 'stats/projects/tasks/' + user.uid)
             .then((response) => {
                 const data = {
                     labels: [],
                     datasets: [
                         {
-                            fill: true,
-                            label: 'Tasks Completed',
+                            label: 'Total Tasks',
                             data: [],
-                            borderColor: 'rgb(240,141,139)',
+                            backgroundColor: 'rgba(56, 116, 203, 0.5)',
+                        },
+                        {
+                            label: 'Completed',
+                            data: [],
                             backgroundColor: 'rgb(240,141,139, 0.5)',
                         },
                     ],
                 };
-                response.data.forEach(day => {
-                    data.labels.push(day.date.slice(5));
-                    data.datasets[0].data.push(day.completed_tasks);
+
+                response.data.forEach(project => {
+                    data.labels.push(project.title.length > 15 ? project.title.substring(0, 15) + '...' : project.title);
+                    data.datasets[0].data.push(project.total_tasks);
+                    data.datasets[1].data.push(project.completed_tasks);
                 });
                 setData(data);
                 setLoading(false);
@@ -98,10 +107,10 @@ const AreaChart = (props) => {
                         <CircularProgress size={'3rem'} />
                     </div>
                 :
-                    <Line options={options} data={data} />
+                    <Bar options={options} data={data} />
             }
         </div>
     );
-}
+};
 
-export default AreaChart;
+export default BarChart;

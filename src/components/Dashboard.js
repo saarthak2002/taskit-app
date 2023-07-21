@@ -10,6 +10,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import AreaChart from "./AreaChart";
+import BarChart from "./BarChart";
 import axios from "axios";
 import { Typography } from "@mui/material";
 
@@ -90,7 +91,7 @@ const Dashboard = () => {
 
                         {userInfo && <h2 style={{color:"rgb(176,176,176)"}}>Hello, {userInfo?.firstname + ' ' + userInfo?.lastname}</h2>}
                         <Typography variant="h6" component="h2">Your Stats</Typography>
-                        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="center" justifyContent="center" style={{padding:'1%'}}>
+                        <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2} alignItems="center" justifyContent="center" style={{padding:'1%'}}>
                             <div style={{width:192}}>
                                 <CircularProgressbarWithChildren 
                                     value={ basicStats.total_tasks > 0 ? (basicStats?.completed_tasks/basicStats?.total_tasks)*100 : 0}
@@ -113,6 +114,9 @@ const Dashboard = () => {
                             </div>
                             <div style={{width:450}}>
                                 <AreaChart user={user} />
+                            </div>
+                            <div style={{width:450}}>
+                                <BarChart user={user} />
                             </div>
                         </Stack>
 
