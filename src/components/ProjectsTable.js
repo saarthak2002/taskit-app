@@ -17,6 +17,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Stack from '@mui/material/Stack';
+import Chip from '@mui/material/Chip';
 
 function Row(props) {
     const { row } = props;
@@ -69,7 +70,13 @@ function Row(props) {
                                         <TableRow key={task.id}>
                                             <TableCell component="th" scope="row">{task.title}</TableCell>
                                             <TableCell>{task.description}</TableCell>
-                                            <TableCell align="right">{task.task_category_name}</TableCell>
+                                            <TableCell align="right">
+                                                <Chip
+                                                    label={task.task_category_name}
+                                                    variant="filled"
+                                                    style={{color: 'white', backgroundColor: task.task_category_color}}
+                                                />
+                                            </TableCell>
                                             <TableCell align="right">
                                                 <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
                                                     {task.status === 'completed' ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}

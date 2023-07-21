@@ -132,7 +132,7 @@ const Login = () => {
                             <img src={logo} alt="logo" height='95' sx={{ mr: 1 }} style={{margin:'auto'}}/>
                             <TextField id="email" label="Email" variant="outlined" onChange={ (event) => setEmail(event.target.value) }/>
                             <TextField id="password" label="Password" variant="outlined" onChange={ (event) => setPassword(event.target.value) }/>
-                            <Button variant="contained" onClick={handleLogin} style={{backgroundColor:'#3D3B30'}} >Login</Button>
+                            <Button variant="contained" onClick={handleLogin} style={{backgroundColor:'#3D3B30'}}>Login</Button>
                             <h5 style={{color:'rgb(192,192,192)'}}>New here? <Link to="/register" style={{textDecoration: 'none', color:'#3D3B30'}}>Sign up</Link></h5>
                             <h6 style={{textAlign:'center', color:"#3D3B30"}}>or</h6>
                             <GoogleButton

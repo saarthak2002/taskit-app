@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
-
+import logo from '../logo-nobg.png';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
@@ -76,6 +76,8 @@ const Register = () => {
                         borderRadius={16}
                         boxShadow={10}
                     >
+                        <img src={logo} alt="logo" height='95' sx={{ mr: 1 }} style={{margin:'auto'}}/>
+
                         <Stack direction={'row'} spacing={2}>
                             <TextField id="first-name" label="First name" variant="outlined" onChange={ (event) => setFirstName(event.target.value) }/>
                             <TextField id="last-name" label="Last name" variant="outlined" onChange={ (event) => setLastName(event.target.value) }/>
@@ -85,8 +87,8 @@ const Register = () => {
                         <TextField id="password" label="Password" variant="outlined" onChange={ (event) => setPassword(event.target.value) }/>
                         <TextField id="confirm-password" label="Confirm password" variant="outlined" onChange={ (event) => setConfirmPassword(event.target.value) }/>
 
-                        <Button variant="contained" onClick={handleRegister}>Register</Button>
-                        <h5>Already a user? <Link to="/login">Sign in</Link></h5>
+                        <Button variant="contained" onClick={handleRegister} style={{backgroundColor:'#3D3B30'}}>Register</Button>
+                        <h5 style={{color:'rgb(192,192,192)'}}>Already a user? <Link to="/login" style={{textDecoration: 'none', color:'#3D3B30'}}>Sign in</Link></h5>
                     </Stack>
                 </Container>
             </ThemeProvider>

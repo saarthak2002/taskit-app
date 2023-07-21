@@ -21,12 +21,14 @@ import logo from '../logo.png'
 import { auth } from '../firebase-config';
 import { signOut } from "firebase/auth";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const drawerWidth = 240;
 
 function SideNav(props) {
     const navigate = useNavigate();
+    const location = useLocation();
+    const currentPath = location.pathname;
     const { componentToDisplay } = props;
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -54,14 +56,15 @@ function SideNav(props) {
     }
 
     const drawer = (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <Toolbar>
                 <img src={logo} alt="logo" height='45' sx={{ mr: 1 }} style={{margin:'auto'}}/>
             </Toolbar>
             <Divider />
+            <div style={{ flexGrow: 1 }}>
             <List>
                 <ListItem key={'dashboard'} disablePadding>
-                    <ListItemButton onClick={goToDashboard}>
+                    <ListItemButton onClick={goToDashboard} selected={currentPath === '/'}>
                         <ListItemIcon>
                             <SpeedIcon />
                         </ListItemIcon>
@@ -69,7 +72,7 @@ function SideNav(props) {
                     </ListItemButton>
                 </ListItem>
                 <ListItem key={'projects'} disablePadding>
-                    <ListItemButton onClick={goToProjectTable}>
+                    <ListItemButton onClick={goToProjectTable} selected={currentPath === '/projects'}>
                         <ListItemIcon>
                             <TableRowsIcon />
                         </ListItemIcon>
@@ -84,7 +87,11 @@ function SideNav(props) {
                         <ListItemText primary={'Collaborate'} />
                     </ListItemButton>
                 </ListItem>
-                <ListItem key={'logout'} disablePadding>
+                
+            </List>
+            </div>
+            <div>
+            <ListItem key={'logout'} disablePadding sx={{marginBottom: '5%'}} divider >
                     <ListItemButton onClick={handleLogout}>
                         <ListItemIcon>
                             <PowerSettingsNewIcon />
@@ -92,7 +99,7 @@ function SideNav(props) {
                         <ListItemText primary={'Logout'} />
                     </ListItemButton>
                 </ListItem>
-            </List>
+            </div>
         </div>
     );
 

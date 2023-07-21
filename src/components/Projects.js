@@ -50,7 +50,6 @@ const Projects = () => {
 
     }, [navigate]);
 
-    console.log(projects);
     return (
         <div>
             {
@@ -62,6 +61,7 @@ const Projects = () => {
                     <div style={{paddingTop:'5%'}}>
                         <h1>{userInfo.username}'s Projects</h1>
                         <ProjectsTable projects={projects} />
+                        {projects.length === 0 && <h3 style={{textAlign: 'center'}}>You have no projects yet</h3>}
                     </div>
             }
         </div>
