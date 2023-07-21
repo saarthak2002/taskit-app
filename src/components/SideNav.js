@@ -17,7 +17,7 @@ import TableRowsIcon from '@mui/icons-material/TableRows';
 import PeopleIcon from '@mui/icons-material/People';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-
+import logo from '../logo.png'
 import { auth } from '../firebase-config';
 import { signOut } from "firebase/auth";
 
@@ -49,9 +49,15 @@ function SideNav(props) {
         navigate('/');
     }
 
+    const goToProjectTable = () => {
+        navigate('/projects');
+    }
+
     const drawer = (
         <div>
-            <Toolbar />
+            <Toolbar>
+                <img src={logo} alt="logo" height='45' sx={{ mr: 1 }} style={{margin:'auto'}}/>
+            </Toolbar>
             <Divider />
             <List>
                 <ListItem key={'dashboard'} disablePadding>
@@ -63,7 +69,7 @@ function SideNav(props) {
                     </ListItemButton>
                 </ListItem>
                 <ListItem key={'projects'} disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={goToProjectTable}>
                         <ListItemIcon>
                             <TableRowsIcon />
                         </ListItemIcon>

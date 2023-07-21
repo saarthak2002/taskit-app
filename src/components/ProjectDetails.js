@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
@@ -20,6 +21,8 @@ import IconButton from '@mui/material/IconButton';
 import CategoryIcon from '@mui/icons-material/Category';
 import { Typography } from "@mui/material";
 import DonutChart from './DonutChart';
+import { auth } from '../firebase-config';
+
 
 const style = {
     position: 'absolute',
@@ -36,6 +39,7 @@ const style = {
 const ProjectDetails = () => {
 
     const { id } = useParams();
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [project, setProject] = useState({tasks:[]});
     const [selectedChip, setSelectedChip] = useState("All");
@@ -97,8 +101,29 @@ const ProjectDetails = () => {
     }
 
     useEffect(() => {
-        getTaskList();
-    }, [getTaskList]);
+        setLoading(true);
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                axios
+                    .get(process.env.REACT_APP_API_URI + 'projects/id/' + id)
+                    .then((response) => {
+                        if (response.data.userUID === user.uid) {
+                            getTaskList();
+                        }
+                        else {
+                            navigate('/unauthorized')
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('error:' + error);
+                        alert('error:' + error);
+                        setLoading(false);
+                    })
+            } else {
+                navigate('/login')
+            }
+        });
+    }, [getTaskList, navigate, id]);
 
     return (
         <div>

@@ -60,14 +60,16 @@ const CreateProject = () => {
                     })
                     .catch((error) => {
                         console.log('error:' + error);
+                        alert('error:' + error);
                         setLoading(false);
                     })
 
             } else {
                 setUser({});
+                navigate('/login')
             }
         });
-    }, []);
+    }, [navigate]);
 
     return (
         <div>
