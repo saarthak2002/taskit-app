@@ -45,11 +45,12 @@ const Register = () => {
                 .post(process.env.REACT_APP_API_URI + 'users', bodyFormData, { headers: headers })
                 .then((response) => {
                     console.log(response.data.message);
+                    navigate('/');
                 })
                 .catch((error) => {
                     console.log('error:' + error);
+                    alert('error:' + error);
                 });
-            navigate('/');
         }
 
         catch (error) {
@@ -60,28 +61,36 @@ const Register = () => {
     };
 
     return (
-        <ThemeProvider theme={defaultTheme}>
-            <Container 
-                maxWidth="sm"
-                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh',  }}
-            >
-                <Stack 
-                    spacing={2}
+        <div style={{height:'100vh', background:'linear-gradient(0deg, rgba(212,137,133,1) 0%, rgba(56,116,203,1) 100%)'}}>
+            <ThemeProvider theme={defaultTheme}>
+                <Container 
+                    maxWidth="sm"
+                    style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh',  }}
                 >
-                    <div>
-                        <TextField id="first-name" label="First name" variant="outlined" onChange={ (event) => setFirstName(event.target.value) }/>
-                        <TextField id="last-name" label="Last name" variant="outlined" onChange={ (event) => setLastName(event.target.value) }/>
-                    </div>
-                    <TextField id="username" label="Username" variant="outlined" onChange={ (event) => setUserName(event.target.value) }/>
-                    <TextField id="email" label="Email" variant="outlined" onChange={ (event) => setEmail(event.target.value) }/>
-                    <TextField id="password" label="Password" variant="outlined" onChange={ (event) => setPassword(event.target.value) }/>
-                    <TextField id="confirm-password" label="Confirm password" variant="outlined" onChange={ (event) => setConfirmPassword(event.target.value) }/>
+                    <Stack 
+                        spacing={2}
+                        backgroundColor="white"
+                        border={10}
+                        padding={5}
+                        borderColor={'#3D3B30'}
+                        borderRadius={16}
+                        boxShadow={10}
+                    >
+                        <Stack direction={'row'} spacing={2}>
+                            <TextField id="first-name" label="First name" variant="outlined" onChange={ (event) => setFirstName(event.target.value) }/>
+                            <TextField id="last-name" label="Last name" variant="outlined" onChange={ (event) => setLastName(event.target.value) }/>
+                        </Stack>
+                        <TextField id="username" label="Username" variant="outlined" onChange={ (event) => setUserName(event.target.value) }/>
+                        <TextField id="email" label="Email" variant="outlined" onChange={ (event) => setEmail(event.target.value) }/>
+                        <TextField id="password" label="Password" variant="outlined" onChange={ (event) => setPassword(event.target.value) }/>
+                        <TextField id="confirm-password" label="Confirm password" variant="outlined" onChange={ (event) => setConfirmPassword(event.target.value) }/>
 
-                    <Button variant="contained" onClick={handleRegister}>Register</Button>
-                    <h5>Already a user? <Link to="/login">Sign in</Link></h5>
-                </Stack>
-            </Container>
-        </ThemeProvider>
+                        <Button variant="contained" onClick={handleRegister}>Register</Button>
+                        <h5>Already a user? <Link to="/login">Sign in</Link></h5>
+                    </Stack>
+                </Container>
+            </ThemeProvider>
+        </div>
     );
 };
 

@@ -163,9 +163,11 @@ const ProjectDetails = () => {
                                 <CircularProgressbarWithChildren value={percentage ? percentage : 0} text={`${percentage ? percentage.toFixed(2) : '0'}%`} />
                                 <h5 style={{color:'#BC7F54', textAlign:'center'}}>{completedTasks} of {project.tasks.length} {project.tasks.length === 1 ? 'task' :'tasks'} completed</h5>
                             </div>
-                            <div style={{ marginBottom:'5%'}}>
-                                <DonutChart project={project} categories={categories}/>
-                            </div>
+                            { project.tasks.length > 0 &&
+                                <div style={{ marginBottom:'5%'}}>
+                                    <DonutChart project={project} categories={categories}/>
+                                </div>
+                            }
                         </Stack>
                         
                         <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" style={{padding:'1%', paddingBottom:0}}>

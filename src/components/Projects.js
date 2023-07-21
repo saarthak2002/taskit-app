@@ -59,7 +59,7 @@ const Projects = () => {
                         <CircularProgress size={'3rem'} />
                     </div>
                 :
-                    <div>
+                    <div style={{paddingTop:'5%'}}>
                         <h1>{userInfo.username}'s Projects</h1>
                         <ProjectsTable projects={projects} />
                     </div>

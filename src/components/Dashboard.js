@@ -89,7 +89,7 @@ const Dashboard = () => {
                             </Grid>
                         </Grid>
 
-                        {userInfo && <h2 style={{color:"rgb(176,176,176)"}}>Hello, {userInfo?.firstname + ' ' + userInfo?.lastname}</h2>}
+                        {userInfo && <h2 style={{color:"rgb(176,176,176)"}}>Hello, {userInfo.firstname + ' ' + userInfo.lastname}</h2>}
                         <Typography variant="h6" component="h2">Your Stats</Typography>
                         <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2} alignItems="center" justifyContent="center" style={{padding:'1%'}}>
                             <div style={{width:192}}>
