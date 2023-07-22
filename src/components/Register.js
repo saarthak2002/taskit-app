@@ -13,9 +13,17 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
+import InputAdornment from '@mui/material/InputAdornment';
 import axios from "axios";
 
 const defaultTheme = createTheme();
+const buttonTheme = createTheme({
+    palette: {
+        primary: {
+            main: '#3D3B30',
+        }
+    }
+});
 
 const Register = () => {
 
@@ -29,6 +37,8 @@ const Register = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [userNameInputLoading, setUsernameInputLoading] = useState(false);
+    const [userNameAlreadyExists, setUserNameAlreadyExists] = useState(false);
 
     const validateForm = () => {
         if (firstName === '') {
@@ -120,6 +130,31 @@ const Register = () => {
         
     };
 
+    const userNameTyped = (event) => {
+        
+        if(event.target.value !== '' && !event.target.value.includes('/') && !event.target.value.includes('\\')) {
+            setUserName(event.target.value);
+            setUsernameInputLoading(true);
+            axios
+                .get(process.env.REACT_APP_API_URI + 'users/exist/' + event.target.value)
+                .then((response) => {
+                    if(response.data.exists) {
+                        setUserNameAlreadyExists(true);
+                        setUsernameInputLoading(false);
+                    }
+                    else {
+                        setUserNameAlreadyExists(false);
+                        setUsernameInputLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    console.log('error:' + error);
+                    alert('error:' + error);
+                    setUsernameInputLoading(false);
+                });
+        }
+    }
+
     return (
         <div style={{height:'100vh', background:'linear-gradient(0deg, rgba(212,137,133,1) 0%, rgba(56,116,203,1) 100%)'}}>
             <ThemeProvider theme={defaultTheme}>
@@ -165,12 +200,24 @@ const Register = () => {
                                     <TextField id="first-name" label="First name" variant="outlined" onChange={ (event) => setFirstName(event.target.value) }/>
                                     <TextField id="last-name" label="Last name" variant="outlined" onChange={ (event) => setLastName(event.target.value) }/>
                                 </Stack>
-                                <TextField id="username" label="Username" variant="outlined" onChange={ (event) => setUserName(event.target.value) }/>
+                                <TextField
+                                    id="username"
+                                    label="Username"
+                                    variant="outlined"
+                                    onChange={ (event) => {userNameTyped(event);} }
+                                    InputProps={{
+                                        endAdornment:
+                                            userNameInputLoading && <InputAdornment position="end"><CircularProgress /></InputAdornment>
+                                    }}
+                                    error={userNameAlreadyExists}
+                                    helperText={userNameAlreadyExists ? 'Username already exists' : ''}
+                                />
                                 <TextField id="email" label="Email" variant="outlined" onChange={ (event) => setEmail(event.target.value) }/>
                                 <TextField id="password" label="Password" variant="outlined" onChange={ (event) => setPassword(event.target.value) }/>
                                 <TextField id="confirm-password" label="Confirm password" variant="outlined" onChange={ (event) => setConfirmPassword(event.target.value) }/>
-
-                                <Button variant="contained" onClick={handleRegister} style={{backgroundColor:'#3D3B30'}}>Register</Button>
+                                <ThemeProvider theme={buttonTheme}>
+                                    <Button variant="contained" onClick={handleRegister} disabled={userNameAlreadyExists}>Register</Button>
+                                </ThemeProvider>
                                 <h5 style={{color:'rgb(192,192,192)'}}>Already a user? <Link to="/login" style={{textDecoration: 'none', color:'#3D3B30'}}>Sign in</Link></h5>
                             </Stack>
                     }
