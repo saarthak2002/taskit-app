@@ -20,6 +20,7 @@ import DeleteTaskModal from "./DeleteTaskModal";
 import EditTaskModal from "./EditTaskModal";
 import Chip from '@mui/material/Chip';
 import axios from "axios";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -59,35 +60,37 @@ const TaskCard = (props) => {
     const handleOpenEditModal = () => setOpenEditModal(true);
     const handleCloseEditModal = () => setOpenEditModal(false);
 
+    const [cardLoading, setCardLoading] = React.useState(false);
+
     const markAsComplete = () => {
-        setLoading(true);
+        setCardLoading(true);
         axios
             .post(process.env.REACT_APP_API_URI + 'task/' + task.id + '/complete')
             .then((response) => {
                 console.log(response.data.message);
                 refresh();
-                setLoading(false);
+                setCardLoading(false);
             })
             .catch((error) => {
                 console.log('error:' + error);
                 alert('error:' + error);
-                setLoading(false);
+                setCardLoading(false);
             })
     }
 
     const markAsIncomplete = () => {
-        setLoading(true);
+        setCardLoading(true);
         axios
             .post(process.env.REACT_APP_API_URI + 'task/' + task.id + '/pending')
             .then((response) => {
                 console.log(response.data.message);
                 refresh();
-                setLoading(false);
+                setCardLoading(false);
             })
             .catch((error) => {
                 console.log('error:' + error);
                 alert('error:' + error);
-                setLoading(false);
+                setCardLoading(false);
             })
     }
 
@@ -106,57 +109,76 @@ const TaskCard = (props) => {
     return (
         <div>
             {/* Task Info Card */}
-            <Card sx={{ maxWidth: 350, minWidth: 300 }} >
-                <CardHeader
-                    title={task.title}
-                    subheader={task.status.charAt(0).toUpperCase() + task.status.slice(1)}
-                    subheaderTypographyProps={task.status === 'pending' ? {color:'error'} : {color:'rgb(69,123,59)'}}
-                    action={
-                        task.status === 'pending' ?
-                        <IconButton aria-label="mark as complete" size="large" color="success" onClick={ () => {markAsComplete();}}>
-                            <CheckCircleIcon style={{width:40,height:40}} />
-                        </IconButton>
-                        :
-                        <IconButton aria-label="mark as not complete" size="large" color="error" onClick={ () => {markAsIncomplete();} }>
-                            <CancelIcon style={{width:40,height:40}} />
-                        </IconButton>
-                    }
-                />
-                <CardContent>
-                    <Chip
-                        label={task.task_category_name}
-                        variant="filled"
-                        style={{color: 'white', backgroundColor: task.task_category_color}}
-                    />
-                </CardContent>
-                <CardActions disableSpacing>
-                    <ExpandMore
-                        expand={expanded}
-                        onClick={handleExpandClick}
-                        aria-expanded={expanded}
-                        aria-label="show more"
-                    >
-                        <ExpandMoreIcon />
-                    </ExpandMore>
-                </CardActions>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                    <CardContent>
-                        <Typography paragraph>{ task.description }</Typography>
-                        { 
-                            task.status === 'completed' &&
-                            <Typography color="rgb(176,176,176)">
-                                Completed at { task.completed_at_time ? formatDate(task.completed_at_time) : '' }
-                            </Typography>
+            { cardLoading ?
+                
+                    <Card sx={{ maxWidth: 350, minWidth: 300 }} >
+                        <CardHeader
+                            title={task.title}
+                            subheader={task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+                            subheaderTypographyProps={task.status === 'pending' ? {color:'error'} : {color:'rgb(69,123,59)'}}
+                        />
+                        <CardContent>
+                            <div  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                <CircularProgress size={'3rem'} />
+                            </div>
+                        </CardContent>
+                    </Card>
+               
+            :
+            
+                <Card sx={{ maxWidth: 350, minWidth: 300 }} >
+                    <CardHeader
+                        title={task.title}
+                        subheader={task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+                        subheaderTypographyProps={task.status === 'pending' ? {color:'error'} : {color:'rgb(69,123,59)'}}
+                        action={
+                            task.status === 'pending' ?
+                            <IconButton aria-label="mark as complete" size="large" color="success" onClick={ () => {markAsComplete();}}>
+                                <CheckCircleIcon style={{width:40,height:40}} />
+                            </IconButton>
+                            :
+                            <IconButton aria-label="mark as not complete" size="large" color="error" onClick={ () => {markAsIncomplete();} }>
+                                <CancelIcon style={{width:40,height:40}} />
+                            </IconButton>
                         }
-                        <IconButton onClick={() => {handleOpenEditModal();} }>
-                            <EditIcon />
-                        </IconButton>
-                        <IconButton onClick={() => {handleOpenDeleteModal();} }>
-                            <DeleteIcon />
-                        </IconButton>
+                    />
+                    <CardContent>
+                        <Chip
+                            label={task.task_category_name}
+                            variant="filled"
+                            style={{color: 'white', backgroundColor: task.task_category_color}}
+                        />
                     </CardContent>
-                </Collapse>
-            </Card>
+                    <CardActions disableSpacing>
+                        <ExpandMore
+                            expand={expanded}
+                            onClick={handleExpandClick}
+                            aria-expanded={expanded}
+                            aria-label="show more"
+                        >
+                            <ExpandMoreIcon />
+                        </ExpandMore>
+                    </CardActions>
+                    <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        <CardContent>
+                            <Typography paragraph>{ task.description }</Typography>
+                            { 
+                                task.status === 'completed' &&
+                                <Typography color="rgb(176,176,176)">
+                                    Completed at { task.completed_at_time ? formatDate(task.completed_at_time) : '' }
+                                </Typography>
+                            }
+                            <IconButton onClick={() => {handleOpenEditModal();} }>
+                                <EditIcon />
+                            </IconButton>
+                            <IconButton onClick={() => {handleOpenDeleteModal();} }>
+                                <DeleteIcon />
+                            </IconButton>
+                        </CardContent>
+                    </Collapse>
+                </Card>
+                // <div></div>
+            }       
 
             {/* Confirm Delete Task Modal */}
             <Modal

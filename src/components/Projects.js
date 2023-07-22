@@ -5,7 +5,9 @@ import ProjectsTable from "./ProjectsTable";
 import { auth } from '../firebase-config';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
-
+import { Link } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
 const Projects = () => {
 
@@ -44,7 +46,7 @@ const Projects = () => {
             } else {
                 setUser({});
                 setLoginError(true);
-                navigate('/login')
+                navigate('/login');
             }
         });
 
@@ -59,7 +61,18 @@ const Projects = () => {
                     </div>
                 :
                     <div style={{paddingTop:'5%'}}>
-                        <h1>{userInfo.username}'s Projects</h1>
+                        <Grid container justifyContent="space-between" alignItems="center">
+                            <Grid item>
+                                <h1>{userInfo.username}'s Projects</h1>
+                            </Grid>
+                            <Grid item>
+                                <Link to="/create-project">
+                                    <Button variant="contained" size="large">
+                                        + Create Project
+                                    </Button>
+                                </Link>
+                            </Grid>
+                        </Grid>
                         <ProjectsTable projects={projects} />
                         {projects.length === 0 && <h3 style={{textAlign: 'center'}}>You have no projects yet</h3>}
                     </div>

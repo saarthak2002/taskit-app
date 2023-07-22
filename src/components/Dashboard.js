@@ -135,7 +135,7 @@ const Dashboard = () => {
                                 }
                             </Grid>
                         :
-                            <h3>No projects yet</h3>
+                            <h2 style={{textAlign:'center'}}>No projects yet</h2>
                     }
                         
                     </div>
