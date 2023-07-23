@@ -12,7 +12,6 @@ import Button from '@mui/material/Button';
 const Profile = () => {
 
     const navigate = useNavigate();
-    const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({});
     const [userInfo, setUserInfo] = useState({firstname:'', lastname:'', username:''});
@@ -55,9 +54,9 @@ const Profile = () => {
                                 <h1>{userInfo.username}'s Profile</h1>
                             </Grid>
                             <Grid item>
-                                <Link to="/create-project">
+                                <Link to="/">
                                     <Button variant="contained" size="large">
-                                        + Create Project
+                                        Edit Profile
                                     </Button>
                                 </Link>
                             </Grid>

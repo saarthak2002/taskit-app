@@ -47,6 +47,7 @@ const ProjectDetails = () => {
     const [percentage, setPercentage] = useState(0);
     const [completedTasks, setCompletedTasks] = useState(0);
     const [categories, setCategories] = useState([{name:'', color:''}]);
+    const [user, setUser] = useState({});
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -104,14 +105,31 @@ const ProjectDetails = () => {
         setLoading(true);
         auth.onAuthStateChanged((user) => {
             if (user) {
+                setUser(user);
                 axios
                     .get(process.env.REACT_APP_API_URI + 'projects/id/' + id)
                     .then((response) => {
                         if (response.data.userUID === user.uid) {
+                            setProject(response.data);
                             getTaskList();
                         }
                         else {
-                            navigate('/unauthorized')
+                            axios
+                                .post(process.env.REACT_APP_API_URI + 'collabs/verify/' + id, {userUID: user.uid})
+                                .then((response) => {
+                                    if(response.data.is_collab) {
+                                        setProject(response.data);
+                                        getTaskList();
+                                    }
+                                    else {
+                                        navigate('/unauthorized')
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.log('error:' + error);
+                                    alert('error:' + error);
+                                    setLoading(false);
+                                })
                         }
                     })
                     .catch((error) => {
@@ -157,7 +175,9 @@ const ProjectDetails = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-
+                        <div style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
+                            { project.userUID !== user.uid ? <Typography variant="caption" sx={{textAlign:'center'}} color={'green'}>You are a collaborator on this project</Typography> : null}
+                        </div>
                         <Stack direction={{ xs: 'column', xl: 'row' }} spacing={1} alignItems="center" justifyContent="center" style={{padding:'1%'}}>
                             <div style={{width:'15%'}}>
                                 <CircularProgressbarWithChildren value={percentage ? percentage : 0} text={`${percentage ? percentage.toFixed(2) : '0'}%`} />

@@ -4,6 +4,7 @@ import Login from './components/Login';
 import CreateProject from './components/CreateProject';
 import ProjectDetails from './components/ProjectDetails';
 import Projects from './components/Projects';
+import Collaborate from './components/Collaborate';
 import Profile from './components/Profile';
 import SideNav from './components/SideNav';
 import Unauthorized from './components/Unauthorized';
@@ -20,6 +21,7 @@ function App() {
             <Route path="/create-project" element={<SideNav componentToDisplay={<CreateProject />} />}/>
             <Route path="/project-details/:id" element={<SideNav componentToDisplay={<ProjectDetails />} />}/>
             <Route path="/projects" element={<SideNav componentToDisplay={<Projects />} />}/>
+            <Route path="/collaborate" element={<SideNav componentToDisplay={<Collaborate />} />}/>
             <Route path="/profile" element={<SideNav componentToDisplay={<Profile />} />}/>
             <Route path="/unauthorized" element={<Unauthorized />}/>
           </Routes>

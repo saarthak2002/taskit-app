@@ -38,7 +38,8 @@ const Register = () => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [userNameInputLoading, setUsernameInputLoading] = useState(false);
-    const [userNameAlreadyExists, setUserNameAlreadyExists] = useState(false);
+    const [userNameError, setUserNameError] = useState(false); 
+    const [userNameTextFieldErrorMessage, setUserNameTextFieldErrorMessage] = useState('');
 
     const validateForm = () => {
         if (firstName === '') {
@@ -131,27 +132,37 @@ const Register = () => {
     };
 
     const userNameTyped = (event) => {
-        
+        setUserNameTextFieldErrorMessage('');
+        setUserNameError(false);
         if(event.target.value !== '' && !event.target.value.includes('/') && !event.target.value.includes('\\')) {
             setUserName(event.target.value);
             setUsernameInputLoading(true);
             axios
                 .get(process.env.REACT_APP_API_URI + 'users/exist/' + event.target.value)
                 .then((response) => {
+                    console.log(response.data);
                     if(response.data.exists) {
-                        setUserNameAlreadyExists(true);
+                        setUserNameError(true);
+                        setUserNameTextFieldErrorMessage('Username already exists');
                         setUsernameInputLoading(false);
                     }
                     else {
-                        setUserNameAlreadyExists(false);
+                        setUserNameError(false);
+                        setUserNameTextFieldErrorMessage('');
                         setUsernameInputLoading(false);
                     }
                 })
                 .catch((error) => {
                     console.log('error:' + error);
                     alert('error:' + error);
+                    setUserNameError(true);
+                    setUserNameTextFieldErrorMessage('Error checking username');
                     setUsernameInputLoading(false);
                 });
+        }
+        else if(event.target.value.includes('/') || event.target.value.includes('\\')) {
+            setUserNameError(true);
+            setUserNameTextFieldErrorMessage('Username cannot contain / or \\');
         }
     }
 
@@ -209,14 +220,14 @@ const Register = () => {
                                         endAdornment:
                                             userNameInputLoading && <InputAdornment position="end"><CircularProgress /></InputAdornment>
                                     }}
-                                    error={userNameAlreadyExists}
-                                    helperText={userNameAlreadyExists ? 'Username already exists' : ''}
+                                    error={userNameError}
+                                    helperText={userNameError ? userNameTextFieldErrorMessage : ''}
                                 />
                                 <TextField id="email" label="Email" variant="outlined" onChange={ (event) => setEmail(event.target.value) }/>
                                 <TextField id="password" label="Password" variant="outlined" onChange={ (event) => setPassword(event.target.value) }/>
                                 <TextField id="confirm-password" label="Confirm password" variant="outlined" onChange={ (event) => setConfirmPassword(event.target.value) }/>
                                 <ThemeProvider theme={buttonTheme}>
-                                    <Button variant="contained" onClick={handleRegister} disabled={userNameAlreadyExists}>Register</Button>
+                                    <Button variant="contained" onClick={handleRegister} disabled={userNameError}>Register</Button>
                                 </ThemeProvider>
                                 <h5 style={{color:'rgb(192,192,192)'}}>Already a user? <Link to="/login" style={{textDecoration: 'none', color:'#3D3B30'}}>Sign in</Link></h5>
                             </Stack>

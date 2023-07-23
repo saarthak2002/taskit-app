@@ -80,6 +80,10 @@ function SideNav(props) {
         navigate('/projects');
     }
 
+    const goToCollab = () => {
+        navigate('/collaborate');
+    }
+
     const goToProfile = () => {
         navigate('/profile');
     }
@@ -109,7 +113,7 @@ function SideNav(props) {
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={'collaborate'} disablePadding>
-                        <ListItemButton>
+                        <ListItemButton onClick={goToCollab} selected={currentPath === '/collaborate'}>
                             <ListItemIcon>
                                 <PeopleIcon />
                             </ListItemIcon>
