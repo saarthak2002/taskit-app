@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -46,8 +47,9 @@ const style = {
 };
 
 const TaskCard = (props) => {
-    const { task, refresh, setLoading } = props;
-    const [expanded, setExpanded] = React.useState(false);
+    const { task, refresh, user } = props;
+    const [expanded, setExpanded] = useState(false);
+    const [currentUserInfo, setCurrentUserInfo] = useState({});
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
@@ -64,6 +66,8 @@ const TaskCard = (props) => {
 
     const markAsComplete = () => {
         setCardLoading(true);
+        console.log('completed by: ' + user.uid);
+        console.log('completed by: ' + currentUserInfo.firstname);
         axios
             .post(process.env.REACT_APP_API_URI + 'task/' + task.id + '/complete')
             .then((response) => {
@@ -106,11 +110,25 @@ const TaskCard = (props) => {
         return `${hours}:${minutes}:${seconds} on ${year}-${month}-${day} `;
     }
 
+    useEffect(() => {
+        setCardLoading(true);
+        axios
+            .get(process.env.REACT_APP_API_URI + 'users/' + user.uid) 
+            .then((response) => {
+                setCurrentUserInfo(response.data);
+                setCardLoading(false);
+            })
+            .catch((error) => {
+                console.log('error:' + error);
+                alert('error:' + error);
+                setCardLoading(false);
+            })
+    }, [user.uid]);
+
     return (
         <div>
             {/* Task Info Card */}
             { cardLoading ?
-                
                     <Card sx={{ maxWidth: 350, minWidth: 300 }} >
                         <CardHeader
                             title={task.title}
@@ -177,7 +195,6 @@ const TaskCard = (props) => {
                         </CardContent>
                     </Collapse>
                 </Card>
-                // <div></div>
             }       
 
             {/* Confirm Delete Task Modal */}

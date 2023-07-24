@@ -16,13 +16,14 @@ import Fade from '@mui/material/Fade';
 import Backdrop from '@mui/material/Backdrop';
 import AddTaskModal from "./AddTaskModal";
 import EditCategoriesModal from "./EditCategoriesModal";
+import CollabModal from "./CollabModal";
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CategoryIcon from '@mui/icons-material/Category';
+import PeopleIcon from '@mui/icons-material/People';
 import { Typography } from "@mui/material";
 import DonutChart from './DonutChart';
 import { auth } from '../firebase-config';
-
 
 const style = {
     position: 'absolute',
@@ -56,6 +57,10 @@ const ProjectDetails = () => {
     const [openCatModal, setOpenCatModal] = useState(false);
     const handleOpenCatModal = () => setOpenCatModal(true);
     const handleCloseCatModal = () => setOpenCatModal(false);
+
+    const [openCollabModal, setOpenCollabModal] = useState(false);
+    const handleOpenCollabModal = () => setOpenCollabModal(true);
+    const handleCloseCollabModal = () => setOpenCollabModal(false);
 
     const getTaskList = useCallback(() => {
         setLoading(true);
@@ -158,9 +163,24 @@ const ProjectDetails = () => {
                                 <h1>{project.title}</h1>
                             </Grid>
                             <Grid item>
+                                {
+                                    project.userUID === user.uid &&
+                                        <IconButton 
+                                            aria-label="collab" 
+                                            style={{borderRadius:5, marginRight:20}}
+                                            sx={{
+                                                border: "1px solid",
+                                                borderColor: "rgb(117,117,117)"
+                                            }}
+                                            onClick={handleOpenCollabModal}
+                                        >
+                                            <PeopleIcon style={{marginRight:5}}/>
+                                            <Typography>Collaborators</Typography>
+                                        </IconButton>
+                                }
                                 <IconButton 
                                     aria-label="edit" 
-                                    style={{borderRadius:1}}
+                                    style={{borderRadius:5}}
                                     sx={{
                                         border: "1px solid",
                                         borderColor: "rgb(117,117,117)"
@@ -241,14 +261,14 @@ const ProjectDetails = () => {
                                             if (categoryChipFilter === 'None') {
                                                 return (
                                                     <Grid item key={task.id}>
-                                                        <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                        <TaskCard task={task} refresh={getTaskList} user={user} />
                                                     </Grid>
                                                 )
                                             }
                                             else if (task.task_category_name === categoryChipFilter) {
                                                 return (
                                                     <Grid item key={task.id}>
-                                                        <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                        <TaskCard task={task} refresh={getTaskList} user={user} />
                                                     </Grid>
                                                 )
                                             }
@@ -262,14 +282,14 @@ const ProjectDetails = () => {
                                             if (categoryChipFilter === 'None') {
                                                 return (
                                                     <Grid item key={task.id}>
-                                                        <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                        <TaskCard task={task} refresh={getTaskList} user={user} />
                                                     </Grid>
                                                 )
                                             }
                                             else if (task.task_category_name === categoryChipFilter) {
                                                 return (
                                                     <Grid item key={task.id}>
-                                                        <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                        <TaskCard task={task} refresh={getTaskList} user={user} />
                                                     </Grid>
                                                 )
                                             }
@@ -282,14 +302,14 @@ const ProjectDetails = () => {
                                         if (categoryChipFilter === 'None') {
                                             return (
                                                 <Grid item key={task.id}>
-                                                    <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                    <TaskCard task={task} refresh={getTaskList} user={user} />
                                                 </Grid>
                                             )
                                         }
                                         else if (task.task_category_name === categoryChipFilter) {
                                             return (
                                                 <Grid item key={task.id}>
-                                                    <TaskCard task={task} refresh={getTaskList} setLoading={setLoading} />
+                                                    <TaskCard task={task} refresh={getTaskList} user={user} />
                                                 </Grid>
                                             )
                                         }
@@ -341,6 +361,28 @@ const ProjectDetails = () => {
                             <Fade in={openCatModal}>
                                 <Box sx={style}>
                                     <EditCategoriesModal project={project} handleClose={handleCloseCatModal} refresh={getTaskList}/>
+                                </Box>
+                            </Fade>
+                        </Modal>
+
+                        {/* Collaborators modal */}
+                        <Modal
+                            aria-labelledby="transition-modal-title"
+                            aria-describedby="transition-modal-description"
+                            open={openCollabModal}
+                            onClose={handleCloseCollabModal}
+                            closeAfterTransition
+                            slots={{ backdrop: Backdrop }}
+                            slotProps={{
+                                backdrop: {
+                                    timeout: 500,
+                                },
+                            }}
+                            sx={{overflow:'scroll'}}
+                        >
+                            <Fade in={openCollabModal}>
+                                <Box sx={style}>
+                                    <CollabModal handleClose={handleCloseCollabModal} projectId={id} userUid={user.uid} />
                                 </Box>
                             </Fade>
                         </Modal>
