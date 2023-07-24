@@ -338,7 +338,7 @@ const ProjectDetails = () => {
                         >
                             <Fade in={open}>
                                 <Box sx={style}>
-                                    <AddTaskModal project={project} handleClose={handleClose} refresh={getTaskList} />
+                                    <AddTaskModal project={project} handleClose={handleClose} refresh={getTaskList} userUid={user.uid} />
                                 </Box>
                             </Fade>
                         </Modal>

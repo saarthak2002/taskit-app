@@ -22,6 +22,8 @@ import EditTaskModal from "./EditTaskModal";
 import Chip from '@mui/material/Chip';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
+import Avatar from '@mui/material/Avatar';
+import { Stack } from "@mui/material";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -69,7 +71,7 @@ const TaskCard = (props) => {
         console.log('completed by: ' + user.uid);
         console.log('completed by: ' + currentUserInfo.firstname);
         axios
-            .post(process.env.REACT_APP_API_URI + 'task/' + task.id + '/complete')
+            .post(process.env.REACT_APP_API_URI + 'task/' + task.id + '/complete', {completed_by: currentUserInfo.firstname + ' ' + currentUserInfo.lastname})
             .then((response) => {
                 console.log(response.data.message);
                 refresh();
@@ -161,6 +163,16 @@ const TaskCard = (props) => {
                         }
                     />
                     <CardContent>
+                        <Stack direction="row" spacing={1} style={{paddingBottom: '2%'}}>
+                        {
+                            task.status === 'completed' && task.completed_by &&
+                            <Avatar>{task.completed_by.split(" ")[0].charAt(0)+task.completed_by.split(" ")[1].charAt(0)}</Avatar>
+                        }
+                        {
+                            task.status === 'pending' && task.created_by &&
+                            <Avatar>{task.created_by.split(" ")[0].charAt(0)+task.created_by.split(" ")[1].charAt(0)}</Avatar>
+                        }
+                        </Stack>
                         <Chip
                             label={task.task_category_name}
                             variant="filled"
@@ -180,10 +192,13 @@ const TaskCard = (props) => {
                     <Collapse in={expanded} timeout="auto" unmountOnExit>
                         <CardContent>
                             <Typography paragraph>{ task.description }</Typography>
+                            <Typography color="rgb(176,176,176)">
+                                Created on {task.date_added.slice(0, 16)} by {task.created_by}
+                            </Typography>
                             { 
                                 task.status === 'completed' &&
                                 <Typography color="rgb(176,176,176)">
-                                    Completed at { task.completed_at_time ? formatDate(task.completed_at_time) : '' }
+                                    Completed at { task.completed_at_time ? formatDate(task.completed_at_time) : '' } by { task.completed_by ? task.completed_by : '' }
                                 </Typography>
                             }
                             <IconButton onClick={() => {handleOpenEditModal();} }>

@@ -15,7 +15,7 @@ import Box from '@mui/material/Box';
 
 const AddTaskModal = (props) => {
 
-    const { project, handleClose, refresh } = props;
+    const { project, handleClose, refresh, userUid } = props;
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDesc, setTaskDesc] = useState('');
     const [taskCategoryId, setTaskCategoryId] = useState(-1);
@@ -65,7 +65,7 @@ const AddTaskModal = (props) => {
         taskData.append('description', taskDesc);
         taskData.append('task_category_name', taskCategoryName);
         taskData.append('task_category_color', taskCategoryColor);
-
+        taskData.append('created_by_user_uid', userUid);
         axios
             .post(process.env.REACT_APP_API_URI + 'projects/' + project.id + '/tasks', taskData, { headers: headers })
             .then((response) => {
