@@ -256,6 +256,7 @@ const ProjectDetails = () => {
                         
                         <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" style={{padding:'1%'}}>
                             <Chip
+                                key={'none'}
                                 label="None"
                                 variant={categoryChipFilter === "None" ? "filled" : "outlined"}
                                 style={categoryChipFilter === "None" ? {color: 'white', backgroundColor: '#bab5b5'} :{color: '#bab5b5', borderColor: '#bab5b5'}}

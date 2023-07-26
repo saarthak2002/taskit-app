@@ -21,6 +21,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SaveIcon from '@mui/icons-material/Save';
+import ProjectList from "./ProjectList";
+import CollabList from "./CollabList";
 
 const style = {
     position: 'absolute',
@@ -48,7 +50,6 @@ const Profile = () => {
 
     const [checkUserNameLoading, setCheckUserNameLoading] = useState(false);
     const [newUserName, setNewUserName] = useState('');
-
     const [userNameError, setUserNameError] = useState(false); 
     const [userNameTextFieldErrorMessage, setUserNameTextFieldErrorMessage] = useState('');
 
@@ -183,7 +184,24 @@ const Profile = () => {
                                 </Tooltip>
                             </Stack>
                         </Stack>
-                            
+                        <Grid container justifyContent="space-around" alignItems="stretch" sx={{marginTop:'2%'}}>
+                            <Grid item>
+                                <div>
+                                    <Typography variant="h3">
+                                        Projects
+                                    </Typography>
+                                    <ProjectList userUid={user.uid}/>
+                                </div>
+                            </Grid>
+                            <Grid item>
+                                <div>
+                                    <Typography variant="h3">
+                                        Collaborators
+                                    </Typography>
+                                    <CollabList userUid={user.uid}/> 
+                                </div>
+                            </Grid>
+                        </Grid>   
                     </div>
             }
 
