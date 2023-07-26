@@ -25,10 +25,12 @@ const CollabModal = (props) => {
     const [searchString, setSearchString] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [searchLoading, setSearchLoading] = useState(false);
+    const [hasSearchedOnce, setHasSearchedOnce] = useState(false);
     const [currentCollabsArray, setCurrentCollabsArray] = useState([]);
 
     const handleSearch = () => {
         setSearchLoading(true);
+        setHasSearchedOnce(true);
         axios
             .get(process.env.REACT_APP_API_URI + '/users/search/' + searchString)
             .then((response) => {
@@ -169,7 +171,13 @@ const CollabModal = (props) => {
                         </Grid>
                         {                                            
                             searchResults.length === 0 ?
-                                <h5>No Results</h5>
+                                hasSearchedOnce ?
+                                    searchLoading ?
+                                        <div></div>
+                                    :
+                                        <h5>No Results</h5>
+                                :
+                                    <div></div>
                             :
                                 <List
                                     sx={{

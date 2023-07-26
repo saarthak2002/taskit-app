@@ -49,6 +49,7 @@ const ProjectDetails = () => {
     const [completedTasks, setCompletedTasks] = useState(0);
     const [categories, setCategories] = useState([{name:'', color:''}]);
     const [user, setUser] = useState({});
+    const [projectOwner, setProjectOwner] = useState({});
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -113,18 +114,39 @@ const ProjectDetails = () => {
                 setUser(user);
                 axios
                     .get(process.env.REACT_APP_API_URI + 'projects/id/' + id)
-                    .then((response) => {
-                        if (response.data.userUID === user.uid) {
-                            setProject(response.data);
+                    .then((response_project) => {
+                        if (response_project.data.userUID === user.uid) {
+                            setProject(response_project.data);
                             getTaskList();
+                            axios   
+                                .get(process.env.REACT_APP_API_URI + '/users/' + response_project.data.userUID)
+                                .then((response_userinfo) => {
+                                    setProjectOwner(response_userinfo.data);
+                                })
+                                .catch((error) => {
+                                    console.log('error:' + error);
+                                    alert('error:' + error);
+                                    setLoading(false);
+                                })
                         }
                         else {
                             axios
                                 .post(process.env.REACT_APP_API_URI + 'collabs/verify/' + id, {userUID: user.uid})
-                                .then((response) => {
-                                    if(response.data.is_collab) {
-                                        setProject(response.data);
+                                .then((response_collab) => {
+                                    if(response_collab.data.is_collab) {
+                                        setProject(response_project.data);
                                         getTaskList();
+                                        axios   
+                                            .get(process.env.REACT_APP_API_URI + '/users/' + response_project.data.userUID)
+                                            .then((response_userinfo) => {
+                                                console.log(response_userinfo.data);
+                                                setProjectOwner(response_userinfo.data);
+                                            })
+                                            .catch((error) => {
+                                                console.log('error:' + error);
+                                                alert('error:' + error);
+                                                setLoading(false);
+                                            })
                                     }
                                     else {
                                         navigate('/unauthorized')
@@ -160,7 +182,8 @@ const ProjectDetails = () => {
                         <h1 style={{paddingBottom:'1%'}}> </h1>
                         <Grid container justifyContent="space-between" alignItems="center">
                             <Grid item>
-                                <h1>{project.title}</h1>
+                                <h1 style={{marginBottom: 0}}>{project.title}</h1>
+                                <Typography color="rgb(176,176,176)">by {projectOwner.firstname} {projectOwner.lastname}</Typography>
                             </Grid>
                             <Grid item>
                                 {

@@ -5,16 +5,20 @@ import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-
+import axios from "axios";
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const ProjectCard = (props) => {
     const navigate = useNavigate();
     const {project} = props;
     const [percentage, setPercentage] = useState(0);
+    const [projectOwner, setProjectOwner] = useState({});
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         var totalTasks = project.tasks.length;
         var completedTasks = 0;
         project.tasks.forEach(task => {
@@ -23,7 +27,19 @@ const ProjectCard = (props) => {
             }
         })
         setPercentage((completedTasks/totalTasks)*100);
-    }, [project.tasks]);
+        axios
+            .get(process.env.REACT_APP_API_URI + 'users/' + project.userUID)
+            .then((response) => {
+                console.log(response.data);
+                setProjectOwner(response.data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.log('error:' + error);
+                alert('error:' + error);
+                setLoading(false);
+            })
+    }, [project.tasks, project.userUID]);
 
     return (
         <Card sx={{ maxWidth: 250 }} style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
@@ -34,6 +50,9 @@ const ProjectCard = (props) => {
                     </CircularProgressbarWithChildren>
                     <Typography gutterBottom variant="h5" component="div" style={{paddingTop: '1%'}}>
                         {project.title}
+                    </Typography>
+                    <Typography color="rgb(176,176,176)">
+                        by {loading ? 'Loading...' : projectOwner.firstname + ' ' + projectOwner.lastname}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                         {project.description}
