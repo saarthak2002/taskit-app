@@ -75,9 +75,9 @@ const Collaborate = () => {
                                             <h1>Your collaborations</h1>
                                         </Grid>
                                         <Grid item>
-                                            <Link to="/">
+                                            <Link to="/projects">
                                                 <Button variant="contained" size="large">
-                                                    TODO
+                                                    Your projects
                                                 </Button>
                                             </Link>
                                         </Grid>

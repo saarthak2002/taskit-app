@@ -16,6 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import Tooltip from '@mui/material/Tooltip';
 
 const CollabModal = (props) => {
 
@@ -163,9 +164,11 @@ const CollabModal = (props) => {
                                             <ListItem key={item.id}>
                                                 <Avatar>{item.firstname.charAt(0)+item.lastname.charAt(0)}</Avatar>
                                                 <ListItemText primary={item.firstname + " " + item.lastname} secondary={item.username} sx={{marginLeft:2}}/>
-                                                <IconButton userUid={item.userUID} onClick={handleRemoveCollab}>
-                                                    <RemoveIcon />
-                                                </IconButton>
+                                                <Tooltip title="Remove Collaborator">
+                                                    <IconButton userUid={item.userUID} onClick={handleRemoveCollab}>
+                                                        <RemoveIcon />
+                                                    </IconButton>
+                                                </Tooltip>
                                             </ListItem>
                                         ))
                                     }
@@ -186,9 +189,11 @@ const CollabModal = (props) => {
                                 />
                             </Grid>
                             <Grid item xs={2}>
-                                <IconButton onClick={handleSearch} sx={{marginLeft: 2}}>
-                                    <SearchIcon />
-                                </IconButton>
+                                <Tooltip title="Search">
+                                    <IconButton onClick={handleSearch} sx={{marginLeft: 2}}>
+                                        <SearchIcon />
+                                    </IconButton>
+                                </Tooltip>
                             </Grid>
                         </Grid>
                         {                                            
@@ -225,9 +230,11 @@ const CollabModal = (props) => {
                                                     item.userUID === userUid ?
                                                         <Chip label="owner" sx={{color:'white', backgroundColor:'rgb(189,189,189)'}} />
                                                     :
-                                                        <IconButton userUid={item.userUID} onClick={ (event) => {handleAddCollab(event);} }>
-                                                            <AddIcon />
-                                                        </IconButton>
+                                                        <Tooltip title="Add Collaborator">
+                                                            <IconButton userUid={item.userUID} onClick={ (event) => {handleAddCollab(event);} }>
+                                                                <AddIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
                                                 }
                                             </ListItem>
                                         ))
