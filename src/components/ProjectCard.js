@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import axios from "axios";
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import CircularProgress from '@mui/material/CircularProgress';
 
 const ProjectCard = (props) => {
     const navigate = useNavigate();

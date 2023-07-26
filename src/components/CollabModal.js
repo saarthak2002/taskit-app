@@ -15,6 +15,7 @@ import Avatar from '@mui/material/Avatar';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 const CollabModal = (props) => {
 
@@ -64,6 +65,24 @@ const CollabModal = (props) => {
                 alert('error:' + error);
                 setModalLoading(false);
             });   
+    }
+
+    const handleRemoveCollab = (event) => {
+        const userUidToDelete = event.currentTarget.getAttribute('userUid');
+        console.log("remove " + userUidToDelete + " from " + projectId);
+        setModalLoading(true);
+        axios
+            .delete(process.env.REACT_APP_API_URI + '/collab/project/' + projectId, {data: {userUID: userUidToDelete}})
+            .then((response) => {
+                console.log(response.data.message);
+                setModalLoading(false);
+                handleClose();
+            })
+            .catch((error) => {
+                console.log('error:' + error);
+                alert('error:' + error);
+                setModalLoading(false);
+            });
     }
 
     useEffect(() => {
@@ -144,6 +163,9 @@ const CollabModal = (props) => {
                                             <ListItem key={item.id}>
                                                 <Avatar>{item.firstname.charAt(0)+item.lastname.charAt(0)}</Avatar>
                                                 <ListItemText primary={item.firstname + " " + item.lastname} secondary={item.username} sx={{marginLeft:2}}/>
+                                                <IconButton userUid={item.userUID} onClick={handleRemoveCollab}>
+                                                    <RemoveIcon />
+                                                </IconButton>
                                             </ListItem>
                                         ))
                                     }

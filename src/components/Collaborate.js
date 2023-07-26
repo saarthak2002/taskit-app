@@ -82,7 +82,7 @@ const Collaborate = () => {
                                             </Link>
                                         </Grid>
                                     </Grid>
-                                    <h5>{user.uid}</h5>
+                                    
                                     <Grid container spacing={2}>
                                         {
                                             projects.map(
