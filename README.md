@@ -1,8 +1,12 @@
 # task.it App
 
-Task.it is a task management platform that allows teams to collaborate effectively and finish things on time. Users can create projects, set tasks for each project, filter tasks by user-defined categories, and add other users as collaborators on their projects. The goal of task.it is to enhance the productivity of individuals and teams for all projects, small or large. See [here](https://github.com/saarthak2002/taskit-backend) for backend.
+Task.it is a task management platform that allows teams to collaborate effectively and finish things on time. Users can create projects, set tasks for each project, filter tasks by user-defined categories, and add other users as collaborators on their projects. The goal of task.it is to enhance the productivity of individuals and teams for all projects, small or large. See [here](https://github.com/saarthak2002/taskit-backend) for backend code.
 
 ![Grid of screenshots](/screenshots/grid-screenshots.png)
+
+The essential features of the platform can be accessed on the go using the [task.it mobile app](https://github.com/saarthak2002/taskit-mobile) built with Flutter.
+
+![task it mobile app cover](/screenshots/taskit-mobile-cover.png)
 
 # Development
 Task.it uses React with Material UI for the frontend web application. The data is served to the frontend from a Flask REST API in the backend. The app uses a Firebase database for email/password or Google OAuth 2.0 based authentication and authorization and a PostgreSQL database for stroing user data. The backend source code can be found [here](https://github.com/saarthak2002/taskit-backend).
